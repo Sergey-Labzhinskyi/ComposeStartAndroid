@@ -1,6 +1,7 @@
 package com.example.composestartandroid.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -30,9 +31,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.composestartandroid.R
 
+private const val TAG = "HomeScreen"
+
 @Composable
 internal fun HomeScreen() {
-    Animation()
+    Lesson8()
 }
 
 @Preview(showBackground = true)
@@ -179,4 +182,63 @@ private fun DisplayText(counter: State<Int>, onCounterClick: () -> Unit) {
         fontSize = 42.sp,
         modifier = Modifier.clickable(onClick = onCounterClick)
     )
+}
+
+/**
+ * Lesson 8
+ * /////////////////////////////////////////////////////////////////////////////////////////////////
+ * Recomposition перезапускает только те функции которые читают State, функции которые передают State
+ * не перезапускаються.
+ */
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+private fun Lesson8() {
+    val counter = mutableStateOf(0)
+    MainScreen(counter = counter) {
+        counter.value++
+    }
+}
+
+@Composable
+private fun MainScreen(
+    counter: State<Int>,
+    onCounterClick: () -> Unit
+) {
+    /**
+     * Если читать counter, то MainScreen будет перезапускаться каждый раз при нажатии!!!
+     */
+    val counterValue = counter.value
+    Log.d(TAG, "MainScreen $counterValue")
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        ClickCounter(counter = counterValue) {
+            onCounterClick()
+        }
+        InfoText(text = if (counter.value < 3) "More" else "Enough")
+    }
+}
+
+@Composable
+private fun ClickCounter(
+    counter: Int,
+    onCounterClick: () -> Unit
+) {
+    Log.d(TAG, "ClickCounter $counter")
+    Text(
+        modifier = Modifier.padding(16.dp).clickable {
+            Log.d(TAG, "ClickCounter click")
+            onCounterClick()
+        },
+        text = "Clicks: $counter"
+    )
+}
+
+@Composable
+private fun InfoText(text: String) {
+    Log.d(TAG, "InfoText $text")
+    Text(text = text, fontSize = 24.sp)
 }
