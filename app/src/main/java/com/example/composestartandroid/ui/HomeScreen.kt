@@ -10,10 +10,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,12 +34,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.composestartandroid.R
+import okhttp3.internal.toHexString
 
 private const val TAG = "HomeScreen"
 
 @Composable
 internal fun HomeScreen() {
-    Lesson8()
+    Lesson9()
 }
 
 @Preview(showBackground = true)
@@ -229,10 +234,12 @@ private fun ClickCounter(
 ) {
     Log.d(TAG, "ClickCounter $counter")
     Text(
-        modifier = Modifier.padding(16.dp).clickable {
-            Log.d(TAG, "ClickCounter click")
-            onCounterClick()
-        },
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable {
+                Log.d(TAG, "ClickCounter click")
+                onCounterClick()
+            },
         text = "Clicks: $counter"
     )
 }
@@ -241,4 +248,63 @@ private fun ClickCounter(
 private fun InfoText(text: String) {
     Log.d(TAG, "InfoText $text")
     Text(text = text, fontSize = 24.sp)
+}
+
+/**
+ * Lesson 9
+ * /////////////////////////////////////////////////////////////////////////////////////////////////
+ */
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+private fun Lesson9() {
+    val counter = mutableStateOf(0)
+    val checked = remember {mutableStateOf(false) }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        ClickCounter2(checked.value, counter = counter) {
+            counter.value++
+        }
+        ClickCheckBox(checked.value) {
+            Log.d(TAG, "Lesson9 $it")
+            checked.value = it
+        }
+    }
+}
+
+@Composable
+private fun ClickCounter2(
+    upperCase: Boolean,
+    counter: State<Int>,
+    onCounterClick: () -> Unit
+) {
+    Log.d(TAG, "ClickCounter2 $upperCase")
+
+    /**
+     * при создании remember with key, то когда ключ меняется объект пересоздасться заново.
+     */
+
+    val evenOdd = remember(upperCase) { EvenOdd(upperCase) }
+    val counterValue = counter.value
+    Text(
+        text = "Clicks: $counterValue ${evenOdd.check(counterValue)}",
+        modifier = Modifier.clickable(onClick = onCounterClick)
+    )
+    Log.d(TAG, "ClickCounter2 $counterValue ${evenOdd.hashCode().toHexString()}")
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ClickCheckBox(
+    checked: Boolean,
+    onChangeChecked: (Boolean) -> Unit
+) {
+    Log.d(TAG, "ClickCheckBox $checked")
+
+    Checkbox(checked = checked, onCheckedChange = {
+        onChangeChecked(it)
+    })
 }
