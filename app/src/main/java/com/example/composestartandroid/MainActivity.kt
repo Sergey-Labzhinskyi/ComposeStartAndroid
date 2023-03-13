@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.composestartandroid.ui.CounterScreen
 import com.example.composestartandroid.ui.HomeScreen
 import com.example.composestartandroid.ui.theme.ComposeStartAndroidTheme
 
@@ -17,7 +18,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeScreen()
+            //HomeScreen()
+            CounterScreen()
 
             /* ComposeStartAndroidTheme {
                  // A surface container using the 'background' color from the theme
