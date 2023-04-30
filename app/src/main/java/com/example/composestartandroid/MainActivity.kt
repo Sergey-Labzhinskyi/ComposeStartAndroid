@@ -3,6 +3,7 @@ package com.example.composestartandroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.composestartandroid.ui.navigation.NavigationScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +12,8 @@ class MainActivity : ComponentActivity() {
             //HomeScreen()
            // CounterScreen()
             //RecompositionScreen()
-            TextFieldScreen()
+            //TextFieldScreen()
+            NavigationScreen()
 
             /* ComposeStartAndroidTheme {
                  // A surface container using the 'background' color from the theme
