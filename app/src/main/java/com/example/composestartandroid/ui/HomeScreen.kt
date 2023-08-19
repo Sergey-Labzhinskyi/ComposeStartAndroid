@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -26,8 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,12 +39,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.composestartandroid.R
 import okhttp3.internal.toHexString
+import org.w3c.dom.Text
 
 private const val TAG = "HomeScreen"
 
 @Composable
 internal fun HomeScreen() {
-    Lesson9()
+    //RowLesson4()
+    SpannableText()
 }
 
 @Preview(showBackground = true)
@@ -306,5 +312,31 @@ private fun ClickCheckBox(
 
     Checkbox(checked = checked, onCheckedChange = {
         onChangeChecked(it)
+    })
+}
+
+@Composable
+private fun SpannableText() {
+    val tnc = "Terms and Condition"
+    val privacyPolicy = "Privacy policy"
+    val annotatedString = buildAnnotatedString {
+        append("I have read ")
+        withStyle(style = SpanStyle(color = Color.Red), ) {
+            pushStringAnnotation(tag = tnc, annotation = tnc)
+            append(tnc)
+        }
+        append(" and ")
+        withStyle(style = SpanStyle(color = Color.Red), ) {
+            pushStringAnnotation(tag = privacyPolicy, annotation = privacyPolicy)
+            append(privacyPolicy)
+        }
+    }
+    ClickableText(text = annotatedString, onClick = { offset ->
+        annotatedString.getStringAnnotations(offset, offset)
+            .firstOrNull()?.let { span ->
+                println("Clicked on ${span.item}")
+                println("Clicked on ${span.tag}")
+                println("Clicked on ${span.end}")
+            }
     })
 }
